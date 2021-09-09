@@ -18,6 +18,9 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Checkout Code (No Submodules)
+      uses: actions/checkout@50fbc622fc4ef5163becd7fab6573eac35f8462e
+      
     - name: Checkout submodules using PAT
       run: |
         git config --file .gitmodules --get-regexp url | while read url; do
