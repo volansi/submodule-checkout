@@ -1,0 +1,40 @@
+name: 'Reliable Recursive Submodule Checkout'
+description: 'Checkout With Submodules (Recursive) Using PAT. MUST be used with actions/checkout@v1'
+inputs:
+  token:
+    description: 'A single Personal Access Token (PAT) which can be used to recursively clone _all_ submodules'
+    required: true
+outputs:
+  branch:
+    description: "Branch Name"
+    value: ${{ steps.vars.outputs.branch }}
+  branch_clean:
+    description: "Branch name cleaned of any '/'"
+    value: ${{ steps.vars.outputs.branch_clean }}
+  sha_short:
+    description: "Short SHA Commit Hash Value"
+    value: ${{ steps.vars.outputs.sha_short }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout submodules using PAT
+      run: |
+        git config --file .gitmodules --get-regexp url | while read url; do
+          git config --file=.gitmodules $(echo "$url" | sed -E "s/git@github.com:|https:\/\/github.com\//https:\/\/${{ inputs.token }}:${{ inputs.token }}@github.com\//")
+        done
+        git submodule sync
+        git submodule update --init --recursive
+      shell: bash
+
+    - name: Setup Variables
+      # Courtesy of: https://github.com/TiagoGouvea/github-actions-test/actions/runs/100049392/workflow
+      id: vars
+      run: |
+        echo "GITHUB_SHA = ${GITHUB_SHA}"
+        echo "GITHUB_REF = ${GITHUB_REF}"
+        echo "BRANCH = ${GITHUB_REF#refs/heads/}"
+        echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+        echo "::set-output name=branch_clean::$(echo ${GITHUB_REF#refs/heads/} | sed 's.\/.\_.g')"
+        echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      shell: bash
