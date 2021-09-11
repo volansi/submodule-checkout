@@ -18,11 +18,19 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: "Where am I?"
+      run: pwd && ls -alh
+      shell: bash
+
     - name: Checkout Code (No Submodules)
       uses: actions/checkout@50fbc622fc4ef5163becd7fab6573eac35f8462e
       
+    - name: "Where am I now?"
+      run: pwd && ls -alh
+      shell: bash
+
     - name: Checkout submodules using PAT
-      run: ${{ github.action_path }}/recurse-submodules.sh ${{ inputs.token }} 
+      run: $GITHUB_ACTION_PATH/recurse-submodules.sh ${{ inputs.token }} 
       shell: bash
 
     - name: Setup Variables
