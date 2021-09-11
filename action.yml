@@ -29,6 +29,10 @@ runs:
       run: pwd && ls -alh
       shell: bash
 
+    - name: Copy recurse-submodules script
+      run: cp $GITHUB_ACTION_PATH/recurse-submodules.sh .
+      shell: bash
+
     - name: Checkout submodules using PAT
       run: $GITHUB_ACTION_PATH/recurse-submodules.sh ${{ inputs.token }} 
       shell: bash
