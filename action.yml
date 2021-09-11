@@ -25,16 +25,16 @@ runs:
     - name: Checkout Code (No Submodules)
       uses: actions/checkout@50fbc622fc4ef5163becd7fab6573eac35f8462e
       
-    - name: "Where am I now?"
-      run: pwd && ls -alh
-      shell: bash
-
     - name: Copy recurse-submodules script
       run: cp $GITHUB_ACTION_PATH/recurse-submodules.sh .
       shell: bash
 
+    - name: "Where am I now?"
+      run: pwd && ls -alh
+      shell: bash
+
     - name: Checkout submodules using PAT
-      run: $GITHUB_ACTION_PATH/recurse-submodules.sh ${{ inputs.token }} 
+      run: $GITHUB_ACTION_PATH/recurse-submodules.sh ${{ inputs.token }} $GITHUB_ACTION_PATH
       shell: bash
 
     - name: Setup Variables
