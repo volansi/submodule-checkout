@@ -47,4 +47,10 @@ runs:
         echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
         echo "::set-output name=branch_clean::$(echo ${GITHUB_REF#refs/heads/} | sed 's.\/.\_.g')"
         echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+        echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+      env:
+        SOURCE_NAME: ${{ steps.vars.outputs.SOURCE_NAME }}
+        SOURCE_BRANCH: ${{ steps.vars.outputs.branch_clean }}
+        SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
       shell: bash
