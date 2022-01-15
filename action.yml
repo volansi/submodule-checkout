@@ -49,10 +49,12 @@ runs:
         echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
         echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
         echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+        echo ::set-output name=GIT_TAG::$(git describe --tags --abbrev=0)"
         echo "SOURCE_TAG = ${GITHUB_REF#refs/tags/}"
         echo "SOURCE_NAME = ${GITHUB_REF#refs/*/}"
       env:
         SOURCE_NAME: ${{ steps.vars.outputs.SOURCE_NAME }}
         SOURCE_BRANCH: ${{ steps.vars.outputs.branch_clean }}
         SOURCE_TAG: ${{ steps.vars.outputs.SOURCE_TAG }}
+        GIT_TAG: ${{ steps.vars.outputs.GIT_TAG }}
       shell: bash
